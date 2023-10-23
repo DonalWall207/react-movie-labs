@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,12 +12,35 @@ import StarRateIcon from "@mui/icons-material/StarRate";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import img from '../../images/film-poster-placeholder.png'
+import { Link } from "react-router-dom";
+import Avatar from '@mui/material/Avatar';
+import Drawer from "@mui/material/Drawer";
+import MovieReviews from "../movieReviews"
 
-export default function MovieCard(props) {
-  const movie = props.movie;
+const MovieDetails = ({ movie }) => {  // Don't miss this!
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleAddToFavorite = (e) => {
+    e.preventDefault();
+    props.selectFavorite(movie.id);
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardHeader title={movie.title} />
+      <CardHeader
+        avatar={
+          movie.favorite ? (
+            <Avatar sx={{ backgroundColor: 'red' }}>
+              <FavoriteIcon />
+            </Avatar>
+          ) : null
+        }
+        title={
+          <Typography variant="h5" component="p">
+            {movie.title}{" "}
+          </Typography>
+        }
+      />
       <CardMedia
         sx={{ height: 500 }}
         image={
@@ -43,13 +66,31 @@ export default function MovieCard(props) {
         </Grid>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={null}>
-          <FavoriteIcon color="primary" fontSize="large" />
-        </IconButton>
-        <Button variant="outlined" size="medium" color="primary">
-          More Info ...
-        </Button>
+      <IconButton aria-label="add to favorites" onClick={handleAddToFavorite}>
+        <FavoriteIcon color="primary" fontSize="large" />
+    </IconButton>
+        <Link to={`/movies/${movie.id}`}>
+          <Button variant="outlined" size="medium" color="primary">
+            More Info ...
+          </Button>
+        </Link>
       </CardActions>
+      <Fab
+        color="secondary"
+        variant="extended"
+        onClick={() =>setDrawerOpen(true)}
+        sx={{
+          position: 'fixed',
+          bottom: '1em',
+          right: '1em'
+        }}
+      >
+        <NavigationIcon />
+        Reviews
+      </Fab>
+      <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <MovieReviews movie={movie} />
+      </Drawer>
     </Card>
   );
 }
