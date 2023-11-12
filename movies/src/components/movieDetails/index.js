@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -6,8 +6,9 @@ import MonetizationIcon from "@mui/icons-material/MonetizationOn";
 import StarRate from "@mui/icons-material/StarRate";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
+import Drawer from "@mui/material/Drawer";
 import Typography from "@mui/material/Typography";
-
+import MovieReviews from "../movieReviews";
 
 const root = {
     display: "flex",
@@ -19,8 +20,8 @@ const root = {
 };
 const chip = { margin: 0.5 };
 
-const MovieDetails = ( props) => {
-  const movie = props.movie
+const MovieDetails = ({ movie }) => {  // Don't miss this!
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <>
@@ -68,7 +69,10 @@ const MovieDetails = ( props) => {
       >
         <NavigationIcon />
         Reviews
-      </Fab>
+        </Fab>
+        <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <MovieReviews movie={movie} />
+        </Drawer>
       </>
   );
 };
